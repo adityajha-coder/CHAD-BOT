@@ -1,0 +1,6 @@
+Plan.md
+node_modules
+.env
+data
+backup
+*.log
