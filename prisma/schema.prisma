@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id           String   @id            // Discord user ID
+  spice        Int?                    // null = use the server default
+  ignored      Boolean  @default(false) // mods set this when someone says "stop"
+  roastedCount Int      @default(0)    // for the leaderboard extra
+  hypedCount   Int      @default(0)
+  updatedAt    DateTime @updatedAt
+}
+
+model Channel {
+  id           String    @id           // Discord channel ID
+  style        String    @default("fun") // "fun" = roast freely, "code" = helpful first
+  autoRoast    Boolean   @default(false)
+  reactions    Boolean   @default(false)
+  gifs         Boolean   @default(false)
+  revive       Boolean   @default(false)
+  lastHumanAt  DateTime?               // last human message (for the 12 h silence rule)
+  lastReviveAt DateTime?
+}
+
+model Fact {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  text      String
+  createdAt DateTime @default(now())
+  @@index([userId])
+}
+
+model RoastLog {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  text      String
+  createdAt DateTime @default(now())
+  @@index([userId])
+}
+
+model RecentMsg {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  text      String
+  createdAt DateTime @default(now())
+  @@index([userId])
+}
+
+model Quota {
+  key   String
+  day   String
+  count Int    @default(0)
+  @@id([key, day])
+}
+
+model Meta {
+  key   String @id
+  value String
+}

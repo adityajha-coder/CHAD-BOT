@@ -5,3 +5,8 @@ backup
 *.log
 Plan.md
 TD.md
+working.md
+.claude/
+.windsurf/
+.agents/
+skills-lock.json
