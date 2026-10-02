@@ -6,9 +6,9 @@
   "scripts": {
     "start": "node server/index.js",
     "dev": "node --watch server/index.js",
-    "deploy:commands": "node server/deploy-commands.js",
-    "check:ai": "node scripts/check-providers.js",
-    "check:gif": "node scripts/check-gif.js",
+    "deploy:commands": "node server/deployCommands.js",
+    "check:ai": "node scripts/checkProviders.js",
+    "check:gif": "node scripts/checkGif.js",
     "db:migrate": "prisma migrate dev && prisma generate",
     "db:deploy": "prisma migrate deploy",
     "db:studio": "prisma studio",
