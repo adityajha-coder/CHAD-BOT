@@ -3,23 +3,17 @@ import { looksDistressed } from './safety.js';
 import { config } from '../config.js';
 
 const RULES = [
-  { rx: /\b(got the job|placed|placement|promoted|offer letter|won hackathon|medal|trophy|selected|cleared|congrats|congratulations)\b/i, emojis: ['🎉', '🔥', '👑'], p: 0.9 },
-  { rx: /\bworks? on my (machine|pc|laptop)\b/i, emojis: ['💀', '😂'], p: 0.85 },
-  { rx: /\b(rm -rf|force[- ]push|push --force|drop table|sudo rm)\b/i, emojis: ['😱', '💀'], p: 0.9 },
-  { rx: /\b(error|exception|traceback|stack ?trace|segfault|cannot read propert|undefined is not|null pointer)\b/i, emojis: ['🐛', '😭', '💀'], p: 0.6 },
-  { rx: /\b(finally|it works|working now|solved|fixed it|got it working|bug fixed)\b/i, emojis: ['🎉', '🫡'], p: 0.6 },
-  { rx: /\b(friday).*(deploy|prod|push)|\b(deploy|prod|push).*friday\b/i, emojis: ['💀', '🫡'], p: 0.8 },
-  { rx: /\b(chatgpt|copilot|claude|gemini|ai wrote|ai ne likha|vibe ?cod)\w*/i, emojis: ['🤖', '👀'], p: 0.35 },
-  { rx: /\btabs?\b.*\bspaces?\b|\bspaces?\b.*\btabs?\b/i, emojis: ['⚔️', '🍿'], p: 0.8 },
-  { rx: /\bpython\b/i, emojis: ['🐍'], p: 0.3 },
-  { rx: /\brust\b/i, emojis: ['🦀'], p: 0.35 },
-  { rx: /\b(javascript|js|node)\b/i, emojis: ['🤡'], p: 0.15 },
-  { rx: /\bphp\b/i, emojis: ['🐘'], p: 0.3 },
-  { rx: /\b(linux|arch|ubuntu)\b/i, emojis: ['🐧'], p: 0.25 },
-  { rx: /\b(pro|goat|sigma|alpha|10x|never lose|mai hi|main hi)\b/i, emojis: ['🧢', '🤡', '💀'], p: 0.4 },
+  { rx: /\b(got the job|placed|placement|promoted|offer letter|exam pass|top kiya|cleared|congrats|congratulations)\b/i, emojis: ['🎉', '🔥', '👑'], p: 0.9 },
+  { rx: /\b(chai|coffee)\b/i, emojis: ['☕'], p: 0.7 },
+  { rx: /\b(biryani|momos|pizza|burger|samosa)\b/i, emojis: ['🤤', '🍕', '🍗'], p: 0.6 },
+  { rx: /\b(lafda|fight|kalesh|e-lafda)\b/i, emojis: ['🍿', '👀'], p: 0.85 },
+  { rx: /\b(clutch|ace|win|winner|booyah|chicken dinner)\b/i, emojis: ['🔥', '👑', '🫡'], p: 0.75 },
+  { rx: /\b(choke|haar gaye|lose|lost|hagg diya|noob)\b/i, emojis: ['💀', '🤡', '😭'], p: 0.7 },
+  { rx: /\b(crush|pyaar|love|single|date|setting)\b/i, emojis: ['👀', '❤️', '😏'], p: 0.5 },
+  { rx: /\b(pro|goat|sigma|alpha|10x|never lose|mai hi|main hi|aura|rizz)\b/i, emojis: ['🧢', '🤡', '💀'], p: 0.4 },
   { rx: /^\s*(gm|good morning)\b/i, emojis: ['🌅', '☕'], p: 0.5 },
-  { rx: /^\s*(gn|good night)\b/i, emojis: ['🌙'], p: 0.5 },
-  { rx: /```/, emojis: ['👀'], p: 0.4 },
+  { rx: /^\s*(gn|good night)\b/i, emojis: ['🌙', '😴'], p: 0.5 },
+  { rx: /\b(kal se pakka|diet|gym)\b/i, emojis: ['🧢', '😂'], p: 0.7 },
 ];
 const RANDOM = ['👀', '😂', '💀', '🔥', '🫡'];
 const pick = (a) => a[Math.floor(Math.random() * a.length)];

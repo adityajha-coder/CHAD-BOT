@@ -3,8 +3,14 @@ export const displayName = (member, user) =>
 
 // Last N channel messages as text, plus the names of the humans who spoke.
 export async function buildChatLog(channel, { limit = 15, botId }) {
-  const fetched = await channel.messages.fetch({ limit });
-  const msgs = [...fetched.values()].reverse(); // oldest first
+  let msgs = [];
+  try {
+    const fetched = await channel.messages?.fetch?.({ limit });
+    if (fetched) msgs = [...fetched.values()].reverse(); // oldest first
+  } catch {
+    // If bot lacks "Read Message History" permission, proceed without chat context
+    return { log: '', participants: [] };
+  }
   const people = new Set();
   let text = '';
   for (const m of msgs) {

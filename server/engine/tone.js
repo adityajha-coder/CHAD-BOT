@@ -1,6 +1,5 @@
 const RX = {
   distress: /(suicid|kill myself|end it all|want to die|self[- ]?harm|cut myself|hang myself|no reason to live|mar jaun|marna chahta|mar jana chahta|jeene ka mann nahi|jeena nahi chahta|khud ko khatam|hospital|panic attack|depress)/i,
-  tech: /```|`[^`]+`|\b(error|exception|traceback|stack ?trace|segfault|undefined|null|npm|pip|git|github|docker|compile|syntax|bug|regex|sql|api|react|python|javascript|typescript|java|node|rust|golang|c\+\+|linux|bash|css|html|leetcode|algorithm|database|deploy|merge|commit)\b/i,
   // sincere "are you a bot?" (needs a question mark or an either/or, so "bot hai tujhe kya pata" stays a roast-back)
   botq: /(\b(bot|ai)\s*(hai|ho)?\s*(ya|or)\s*(insaan|human|real|banda)\b|\bare you (a |an )?(bot|human|real|ai)\b|\btu (bot|insaan|human|real) hai\s*\?)/i,
   roastback: /\b(cucker|bekaar|ghatiya|absolute cucker|useless|worst|dumb|pagal|gadha|bakwas|chup|tujhe kya pata|udiddy|vaste ganahuiya|trash|cringe|overrated)\b/i,
@@ -14,7 +13,6 @@ const RX = {
 
 const HINTS = {
   distress: 'They may be genuinely struggling. Do NOT roast. Reply like a kind friend, 1 or 2 sentences.',
-  tech: 'They are talking tech. Give the correct, concise answer or reaction first, then at most one jab.',
   botq: 'They sincerely asked if you are a bot. Say yes in one casual, funny line. Do not dodge, do not lecture.',
   roastback: 'They are roasting or insulting you. Hit back harder but cleverly: turn their own words against them. Do not get defensive.',
   praise: 'They are being nice. Accept it with swagger and a tiny self-roast. Do not insult them.',
@@ -31,11 +29,9 @@ export function detectTone(text = '') {
   let kind = 'casual';
   if (RX.distress.test(t)) kind = 'distress';
   else if (RX.botq.test(t)) kind = 'botq';
-  else if (RX.tech.test(t) && (RX.question.test(t) || t.includes('```'))) kind = 'tech';
   else if (RX.roastback.test(t)) kind = 'roastback';
   else if (RX.praise.test(t)) kind = 'praise';
   else if (RX.sad.test(t)) kind = 'sad';
-  else if (RX.tech.test(t)) kind = 'tech';
   else if (RX.greeting.test(t)) kind = 'greeting';
   else if (RX.opinion.test(t)) kind = 'opinion';
   else if (RX.question.test(t)) kind = 'question';

@@ -8,9 +8,8 @@ import { log } from '../logger.js';
 const MODE_CFG = {
   roast:      { fast: false, maxTokens: 300, maxChars: 400,  temp: 1.0,  allowCode: false },
   auto:       { fast: true,  maxTokens: 200, maxChars: 300,  temp: 1.0,  allowCode: false },
-  compliment: { fast: false, maxTokens: 250, maxChars: 400,  temp: 1.0,  allowCode: false },
   verdict:    { fast: false, maxTokens: 500, maxChars: 900,  temp: 0.7,  allowCode: false },
-  reply:      { fast: false, maxTokens: 450, maxChars: 1200, temp: 0.85, allowCode: true  },
+  reply:      { fast: false, maxTokens: 350, maxChars: 500,  temp: 0.85, allowCode: false },
 };
 
 function parseTrailers(raw) {
@@ -29,13 +28,12 @@ export async function generate({
   chatLog = '', thread = '', focusText = '', participants = [], allowGif = false,
 }) {
   const cfg = MODE_CFG[mode];
-  const techReply = mode === 'reply' && tone?.kind === 'tech';
   const serious = tone?.kind === 'sad' || tone?.kind === 'distress';
 
   const facts = userId ? await getFacts(userId, 4) : [];
   const avoid = userId && (mode === 'roast' || mode === 'auto') ? await getRecentRoasts(userId, 6) : [];
 
-  const learnable = mode !== 'verdict' && !techReply && !serious;
+  const learnable = mode !== 'verdict' && !serious;
   const learned = [];
   const flopped = [];
 
@@ -55,7 +53,7 @@ export async function generate({
         ],
         fast: cfg.fast,
         maxTokens: cfg.maxTokens,
-        temperature: techReply ? 0.5 : attempt === 0 ? cfg.temp : 0.8,
+        temperature: attempt === 0 ? cfg.temp : 0.8,
       });
 
       const { body, gifQuery } = parseTrailers(text);
