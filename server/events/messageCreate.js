@@ -8,12 +8,11 @@ import { maybeReact } from '../engine/reactions.js';
 import { config } from '../config.js';
 
 const NAME_TRIGGER = /\b(chadbot|chad[\s-]*bot|chad\s*bhai|oye\s*chad)\b/i;
-const CLOSERS = ['Bas bhai, ab naya topic le aa. 😴', 'Itna bol liya, ab thoda code bhi likh le. 💻', 'Chai break. Baad me milte hain. ☕'];
+const CLOSERS = ['Bas bhai, ab naya topic le aa. 😴', 'Itna bol liya, ab thoda aaram bhi kar le. 🥱', 'Chai break. Baad me milte hain. ☕'];
 const pick = (a) => a[Math.floor(Math.random() * a.length)];
 
 function detectMode(text) {
   if (/(verdict|kaun\s+(galat|sahi)|who\s*(is|was)?\s*(wrong|right)|faisla|judge)/i.test(text)) return 'verdict';
-  if (/(compliment|tareef|praise|hype)/i.test(text)) return 'compliment';
   if (/(roast|bezzati|bejjati|ukhaad)/i.test(text)) return 'roast';
   return null;
 }
@@ -42,7 +41,7 @@ async function handleSummon(message, client, { type, ref }) {
   const mode = detectMode(text) ?? 'reply';
   const asker = { id: message.author.id, name: displayName(message.member, message.author) };
 
-  // target of a roast or compliment
+  // target of a roast
   const mentioned = message.mentions.users.find((u) => u.id !== client.user.id && !u.bot);
   const refAuthor = ref && type !== 'reply-to-bot' && !ref.author.bot ? ref.author : null;
   const tu = mentioned ?? refAuthor;

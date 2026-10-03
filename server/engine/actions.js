@@ -15,7 +15,7 @@ export async function runAction({ mode, channel, botId, asker, target = asker, q
 
   const tone = detectTone(question);
   const lang = detectLang(question);
-  const aboutTarget = mode === 'roast' || mode === 'compliment';
+  const aboutTarget = mode === 'roast';
 
   if (tone.kind === 'distress') return { text: SOFT };
   if (mode === 'roast' && looksDistressed(chatLog.slice(-800))) return { text: SOFT };

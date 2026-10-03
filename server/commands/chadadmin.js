@@ -6,9 +6,10 @@ import { providerStatus } from '../ai/providers.js';
 import { config } from '../config.js';
 
 const PRESETS = {
-  fun:   { style: 'fun',  autoRoast: true,  reactions: true, gifs: true,  revive: true },
-  code:  { style: 'code', autoRoast: true,  reactions: true, gifs: false, revive: false },
-  quiet: { style: 'fun',  autoRoast: false, reactions: false, gifs: false, revive: false },
+  fun:   { style: 'fun',   autoRoast: true,  reactions: true, gifs: true,  revive: true },
+  chill: { style: 'chill', autoRoast: true,  reactions: true, gifs: false, revive: false },
+  code:  { style: 'code',  autoRoast: true,  reactions: true, gifs: false, revive: false },
+  quiet: { style: 'fun',   autoRoast: false, reactions: false, gifs: false, revive: false },
 };
 const FEATURES = { autoroast: 'autoRoast', reactions: 'reactions', gifs: 'gifs', revive: 'revive' };
 const onOff = [{ name: 'on', value: 'on' }, { name: 'off', value: 'off' }];
@@ -19,7 +20,12 @@ export const data = new SlashCommandBuilder()
   .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
   .addSubcommand((s) => s.setName('setup').setDescription('Apply a preset to THIS channel')
     .addStringOption((o) => o.setName('preset').setDescription('Preset').setRequired(true)
-      .addChoices({ name: 'fun (roast freely)', value: 'fun' }, { name: 'code (helpful first)', value: 'code' }, { name: 'quiet (summon only)', value: 'quiet' })))
+      .addChoices(
+        { name: 'fun (roast freely)', value: 'fun' },
+        { name: 'code (dev banter)', value: 'code' },
+        { name: 'chill (mild banter)', value: 'chill' },
+        { name: 'quiet (summon only)', value: 'quiet' },
+      )))
   .addSubcommand((s) => s.setName('toggle').setDescription('Turn one feature on/off in THIS channel')
     .addStringOption((o) => o.setName('feature').setDescription('Feature').setRequired(true)
       .addChoices({ name: 'auto-roast', value: 'autoroast' }, { name: 'reactions', value: 'reactions' }, { name: 'gifs', value: 'gifs' }, { name: 'revive (12h silence)', value: 'revive' }))
