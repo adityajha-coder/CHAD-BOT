@@ -85,7 +85,6 @@ const ANGLES = [
   'a sudden analogy that is weirdly accurate',
   'understatement ("bold choice")',
   'grab the exact word they used and mock it',
-  'gaming rank, K/D or lag-excuse energy',
 ];
 
 export const pickAngle = () => rand(ANGLES);

@@ -71,7 +71,7 @@ const BANK = {
     'bc {name}, tera code padhke compiler ne bhi gaali di aur resign kar diya',
     'saale {name}, tu bug nahi, tu pura outage hai jo kisi ne report nahi kiya',
     'bkl {name}, aura itna negative ki tere paas aate hi wifi bhi disconnect ho jata hai 💀',
-    '{name} tera K/D dekh ke bots ne bhi bola "bhai tu mere liye bhi mushkil nahi"',
+    '{name} tera code dekh ke bots ne bhi bola "bhai tu mere liye bhi mushkil nahi"',
     'abe {name}, tera take itna ghatiya tha ki pure server ki IQ minus ho gayi',
     '{name} tu itna cringe hai ki rizz bhi tere naam se darta hai, bc',
     'chutiya level code hai {name}, linter ne phir se resign kar diya',

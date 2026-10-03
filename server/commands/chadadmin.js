@@ -1,9 +1,9 @@
 import { SlashCommandBuilder, PermissionFlagsBits, MessageFlags } from 'discord.js';
 import {
-  setChannel, getChannel, setKilled, isKilled, getQuota, setMeta, setIgnored, forgetUser, startActivityClock,
+  setChannel, getChannel, setKilled, isKilled, getQuota, setMeta, setIgnored, startActivityClock,
 } from '../db/repo.js';
 import { providerStatus } from '../ai/providers.js';
-import { loadBlocklist } from '../engine/safety.js';
+import { config } from '../config.js';
 
 const PRESETS = {
   fun:   { style: 'fun',  autoRoast: true,  reactions: true, gifs: true,  revive: true },
@@ -27,14 +27,11 @@ export const data = new SlashCommandBuilder()
   .addSubcommand((s) => s.setName('ignore').setDescription('Stop roasting/reacting to a member')
     .addUserOption((o) => o.setName('user').setDescription('Member').setRequired(true))
     .addStringOption((o) => o.setName('state').setDescription('on = ignored, off = normal').setRequired(true).addChoices(...onOff)))
-  .addSubcommand((s) => s.setName('forget').setDescription('Delete everything stored about a member')
-    .addUserOption((o) => o.setName('user').setDescription('Member').setRequired(true)))
   .addSubcommand((s) => s.setName('default-spice').setDescription('Server default spice (1-4)')
     .addIntegerOption((o) => o.setName('level').setDescription('1 to 4').setMinValue(1).setMaxValue(4).setRequired(true)))
   .addSubcommand((s) => s.setName('killswitch').setDescription('Pause or resume CHADBOT everywhere')
     .addStringOption((o) => o.setName('state').setDescription('on = paused, off = running').setRequired(true).addChoices(...onOff)))
-  .addSubcommand((s) => s.setName('status').setDescription('Provider usage, bot state, this channel\'s settings'))
-  .addSubcommand((s) => s.setName('reload-blocklist').setDescription('Reload data/blocklist.txt'));
+  .addSubcommand((s) => s.setName('status').setDescription('Provider usage, bot state, this channel\'s settings'));
 
 export async function execute(interaction) {
   const sub = interaction.options.getSubcommand();
@@ -59,11 +56,6 @@ export async function execute(interaction) {
     await setIgnored(user.id, on);
     return reply(`${user.username} is ${on ? 'now ignored (no roasts, reactions or auto-replies)' : 'back to normal'}.`);
   }
-  if (sub === 'forget') {
-    const user = interaction.options.getUser('user');
-    await forgetUser(user.id);
-    return reply(`Deleted stored facts, roast history and message buffer for ${user.username}.`);
-  }
   if (sub === 'default-spice') {
     const level = interaction.options.getInteger('level');
     await setMeta('default_spice', level);
@@ -74,18 +66,37 @@ export async function execute(interaction) {
     await setKilled(on);
     return reply(on ? '🛑 CHADBOT paused everywhere.' : '▶️ CHADBOT resumed.');
   }
-  if (sub === 'reload-blocklist') {
-    loadBlocklist();
-    return reply('Blocklist reloaded.');
-  }
 
   // status
+  if (config.OWNER_ID && interaction.user.id !== config.OWNER_ID) {
+    return reply('Ye command sirf malware ke liye hai. 🔒');
+  }
+
   const ch = await getChannel(interaction.channelId);
   const lines = (await providerStatus()).map((p) => `• **${p.name}**: ${p.usedToday}/${p.limit} today${p.paused ? ' (⏸ paused)' : ''}`);
-  return reply(
+  const statusMsg =
+    `📊 **CHADBOT Status Report**\n` +
     `State: ${(await isKilled()) ? '🛑 paused' : '🟢 running'}\n` +
     `Today: auto-roasts ${await getQuota('auto')}, reactions ${await getQuota('react')}, gifs ${await getQuota('gif')}\n` +
-    `This channel: style=${ch.style}, autoRoast=${ch.autoRoast}, reactions=${ch.reactions}, gifs=${ch.gifs}, revive=${ch.revive}\n` +
-    lines.join('\n')
-  );
+    `Channel: <#${interaction.channelId}> (style=${ch.style}, autoRoast=${ch.autoRoast}, reactions=${ch.reactions}, gifs=${ch.gifs}, revive=${ch.revive})\n` +
+    lines.join('\n');
+
+  if (config.LOG_CHANNEL_ID) {
+    try {
+      const logChannel = await interaction.client.channels.fetch(config.LOG_CHANNEL_ID);
+      const perms = logChannel?.permissionsFor(interaction.client.user);
+      if (!perms?.has('ViewChannel') || !perms?.has('SendMessages')) {
+        return reply(
+          `⚠️ CHADBOT ke paas <#${config.LOG_CHANNEL_ID}> me **View Channel** permission nahi hai! Discord channel settings me bot ko add karo.\n\n` +
+          statusMsg
+        );
+      }
+      await logChannel.send({ content: statusMsg, allowedMentions: { parse: [] } });
+      return reply(`Status report <#${config.LOG_CHANNEL_ID}> send sucessfully. 📬`);
+    } catch (err) {
+      return reply(`⚠️ error while sending to log channel: \`${err.message}\`\n\n` + statusMsg);
+    }
+  }
+
+  return reply(statusMsg);
 }

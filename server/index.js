@@ -27,7 +27,7 @@ client.once(Events.ClientReady, (c) => {
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {
-  if (!interaction.isChatInputCommand()) return;
+  if (!interaction.isChatInputCommand() && !interaction.isContextMenuCommand()) return;
   const cmd = commands.get(interaction.commandName);
   if (!cmd) return;
   try {

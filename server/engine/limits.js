@@ -5,6 +5,7 @@ const last = new Map();
 
 // Returns a message string if the user is limited, otherwise null.
 export async function userLimited(userId) {
+  if (config.OWNER_ID && userId === config.OWNER_ID) return null; // Owner has unlimited usage
   const now = Date.now();
   if (now - (last.get(userId) ?? 0) < 4000) return 'Thoda saans le bhai, 4 second ruk. 😤';
   last.set(userId, now);
