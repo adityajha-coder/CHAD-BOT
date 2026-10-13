@@ -10,6 +10,14 @@ const guildIds = config.DISCORD_GUILD_ID
   : [];
 
 if (guildIds.length > 0) {
+  // Clear any existing global commands
+  try {
+    await rest.put(Routes.applicationCommands(config.DISCORD_CLIENT_ID), { body: [] });
+    console.log('🧹 Cleared global commands to prevent duplicate entries in Discord.');
+  } catch (err) {
+    console.warn('⚠️ Could not clear global commands:', err.message);
+  }
+
   for (const guildId of guildIds) {
     try {
       await rest.put(Routes.applicationGuildCommands(config.DISCORD_CLIENT_ID, guildId), { body });
